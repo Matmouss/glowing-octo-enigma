@@ -34,7 +34,7 @@ def remove_elements_from_docx(doc_path, output_path, elements_to_remove):
     return words_removed_count
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-doc_path = os.path.join(current_dir, "fichier_html.docx")
+doc_path = os.path.join(current_dir, "fichier.docx")
 output_path = os.path.join(current_dir, "document_modifie.docx")
 txt_path = os.path.join(current_dir, "elements.txt")
 elements_to_remove = parse_txt_elements(txt_path)
