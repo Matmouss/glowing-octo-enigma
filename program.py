@@ -14,10 +14,12 @@ def parse_txt_elements(txt_path):
 def remove_elements_from_docx(doc_path, output_path, elements_to_remove):
     doc = Document(doc_path)
     normalized_elements = [normalize_text(element) for element in elements_to_remove]
+    words_removed_count = 0
 
     for paragraph in doc.paragraphs:
         words = paragraph.text.split()
         new_words = [word for word in words if normalize_text(word) not in normalized_elements]
+        words_removed_count += len(words) - len(new_words)
         paragraph.text = ' '.join(new_words)
 
     for table in doc.tables:
@@ -25,9 +27,11 @@ def remove_elements_from_docx(doc_path, output_path, elements_to_remove):
             for cell in row.cells:
                 words = cell.text.split()
                 new_words = [word for word in words if normalize_text(word) not in normalized_elements]
+                words_removed_count += len(words) - len(new_words)
                 cell.text = ' '.join(new_words)
 
     doc.save(output_path)
+    return words_removed_count
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 doc_path = os.path.join(current_dir, "fichier_html.docx")
@@ -35,5 +39,6 @@ output_path = os.path.join(current_dir, "document_modifie.docx")
 txt_path = os.path.join(current_dir, "elements.txt")
 elements_to_remove = parse_txt_elements(txt_path)
 
-remove_elements_from_docx(doc_path, output_path, elements_to_remove)
+words_removed = remove_elements_from_docx(doc_path, output_path, elements_to_remove)
 print("Traitement terminé. Document modifié enregistré sous", output_path)
+print("Nombre total de mots supprimés :", words_removed)
